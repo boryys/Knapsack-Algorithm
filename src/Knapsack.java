@@ -3,67 +3,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class knapsack {
+public class Knapsack {
 
-    private static class rectangle{
-        int id;
-        int l;
-        int w;
-        int area;
-        int p;
 
-        rectangle(int _id, int _l, int _w, int _p){
-            this.id = _id;
-            this.l = _l;
-            this.w = _w;
-            this.area = _l * _w;
-            this.p = _p;
-        }
-    }
-
-    static void printArray(int[][] arr) {
-        for (int i = arr.length - 1; i >= 0; i--) {
-            for (int j = 0; j < arr[i].length; j++) {
-                System.out.print(arr[i][j] + " ");
-            }
-            System.out.println("");
-        }
-        System.out.println("");
-    }
-
-    static void putRectangle(int[][] F, rectangle rec, int i, int j)
-    {
-        for(int l = 0; l < rec.l; l++)
-        {
-            for(int w = 0; w < rec.w; w++)
-            {
-                F[i - l][j - w] = rec.id;
-            }
-        }
-    }
-
-    static boolean canPutRectangle(int[][] F, rectangle rec, int i, int j)
-    {
-        for(int l = 0; l < rec.l; l++)
-        {
-            for(int w = 0; w < rec.w; w++)
-            {
-                if(F[i - l][j - w] != 0) return false;
-            }
-        }
-        return true;
-    }
-
-    static void zeroArray(int[][] F)
-    {
-        for (int i = 0; i < F.length; i++) {
-            for (int j = 0; j < F[i].length; j++) {
-                F[i][j] = 0;
-            }
-        }
-    }
-
-    static boolean fillKnapsack(List<rectangle> rectangles, int L, int W, int[][] F)
+    static boolean fillKnapsack(List<Rectangle> rectangles, int L, int W, ContainerArray containerArray)
     {
         boolean paintedK;
         int sum = 0;
@@ -76,9 +19,9 @@ public class knapsack {
                 {
                     if((rectangles.get(k).l - 1) <= i && (rectangles.get(k).w - 1) <= j)
                     {
-                        if(canPutRectangle(F, rectangles.get(k), i, j))
+                        if(containerArray.canPutRectangle(rectangles.get(k), i, j))
                         {
-                            putRectangle(F, rectangles.get(k), i, j);
+                            containerArray.putRectangle(rectangles.get(k), i, j);
                             sum += rectangles.get(k).p;
                             paintedK = true;
                             break;
@@ -91,7 +34,7 @@ public class knapsack {
         }
 
         System.out.println(sum);
-        printArray(F);
+        containerArray.printArray();
         return true;
     }
 
@@ -139,36 +82,35 @@ public class knapsack {
         int areaF = L*W;
 
         System.out.println("Area F = " + areaF);
-        int[][] maxF = new int[L][W];
-        zeroArray(maxF);
-        printArray(maxF);
+        ContainerArray maxContainerArray = new ContainerArray(L,W);
+        maxContainerArray.printArray();
         int max = 0;
 
-        List<rectangle> rectangles = new ArrayList<rectangle>();
-        List<rectangle> tmp = new ArrayList<rectangle>();
+        List<Rectangle> rectangles = new ArrayList<Rectangle>();
+        List<Rectangle> tmp = new ArrayList<Rectangle>();
 
-        rectangle rec6 = new rectangle(6,2, 2, 3);
+        Rectangle rec6 = new Rectangle(6,2, 2, 3);
         tmp.add(rec6);
-        rectangle rec7 = new rectangle(7, 2, 2, 1);
+        Rectangle rec7 = new Rectangle(7, 2, 2, 1);
         tmp.add(rec7);
-        rectangle rec8 = new rectangle(8, 2, 2, 1);
+        Rectangle rec8 = new Rectangle(8, 2, 2, 1);
         tmp.add(rec8);
-        rectangle rec9 = new rectangle(9, 3, 3, 2);
+        Rectangle rec9 = new Rectangle(9, 3, 3, 2);
         tmp.add(rec9);
-        rectangle rec10 = new rectangle(10, 1, 8, 4);
+        Rectangle rec10 = new Rectangle(10, 1, 8, 4);
         tmp.add(rec10);
-        rectangle rec1 = new rectangle(1,4, 3, 5);
+        Rectangle rec1 = new Rectangle(1,4, 3, 5);
         tmp.add(rec1);
-        rectangle rec2 = new rectangle(2, 3, 3, 3);
+        Rectangle rec2 = new Rectangle(2, 3, 3, 3);
         tmp.add(rec2);
-        rectangle rec3 = new rectangle(3, 5, 2, 3);
+        Rectangle rec3 = new Rectangle(3, 5, 2, 3);
         tmp.add(rec3);
-        rectangle rec4 = new rectangle(4, 1, 4, 3);
+        Rectangle rec4 = new Rectangle(4, 1, 4, 3);
         tmp.add(rec4);
-        rectangle rec5 = new rectangle(5, 6, 6, 25);
+        Rectangle rec5 = new Rectangle(5, 6, 6, 25);
         tmp.add(rec5);
 
-        for(rectangle rec : tmp)
+        for(Rectangle rec : tmp)
         {
             if(rec.l <= L && rec.w <= W)
             {
@@ -176,7 +118,7 @@ public class knapsack {
             }
         }
 
-        for(rectangle rec : rectangles)
+        for(Rectangle rec : rectangles)
         {
             System.out.println("id: " + rec.id + ", l: " + rec.l + ", w: " + rec.w + ", p: " + rec.p + ", area: " + rec.area);
         }
@@ -205,20 +147,20 @@ public class knapsack {
                         }
 
                         List<List<Integer>> permutations = generatePerm(list);
-                        int[][] F = new int[L][W];
+                        ContainerArray currentArray = new ContainerArray(L,W);
 
                         for (List<Integer> perm : permutations) {
-                            List<rectangle> recs = new ArrayList<rectangle>();
-                            zeroArray(F);
+                            List<Rectangle> recs = new ArrayList<Rectangle>();
+                            currentArray.ZeroArray();
                             for (int i : perm) {
                                 recs.add(rectangles.get(i));
                             }
-                            if(fillKnapsack(recs, L, W, F))
+                            if(fillKnapsack(recs, L, W, currentArray))
                             {
-                                maxF = F;
+                                maxContainerArray = currentArray;
                                 max = combinationValue;
 
-                                printArray(maxF);
+                                maxContainerArray.printArray();
                                 System.out.println("Value = " + max);
 
                                 break;
@@ -232,7 +174,7 @@ public class knapsack {
         }
 
         System.out.println("Max ");
-        printArray(maxF);
+        maxContainerArray.printArray();
         System.out.println("Value = " + max);
     }
 }
