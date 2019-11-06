@@ -38,26 +38,27 @@ public class Knapsack {
         return true;
     }
 
-    private static void helper(List<int[]> combinations, int data[], int start, int end, int index) {
+    //Helper for generating combinations
+    private static void CombinationsHelper(List<int[]> combinations, int data[], int start, int end, int index) {
         if (index == data.length) {
             int[] combination = data.clone();
             combinations.add(combination);
         } else if (start <= end) {
             data[index] = start;
-            helper(combinations, data, start + 1, end, index + 1);
-            helper(combinations, data, start + 1, end, index);
+            CombinationsHelper(combinations, data, start + 1, end, index + 1);
+            CombinationsHelper(combinations, data, start + 1, end, index);
         }
     }
 
-    public static List<int[]> generate(int n, int r) {
+    public static List<int[]> generateCombinations(int n, int r) {
         List<int[]> combinations = new ArrayList<>();
 
-        helper(combinations, new int[r], 0, n-1, 0);
+        CombinationsHelper(combinations, new int[r], 0, n-1, 0);
 
         return combinations;
     }
 
-    public static List<List<Integer>> generatePerm(List<Integer> original) {
+    public static List<List<Integer>> generatePermutations(List<Integer> original) {
         if (original.size() == 0) {
             List<List<Integer>> result = new ArrayList<List<Integer>>();
             result.add(new ArrayList<Integer>());
@@ -65,7 +66,7 @@ public class Knapsack {
         }
         int firstElement = original.remove(0);
         List<List<Integer>> returnValue = new ArrayList<List<Integer>>();
-        List<List<Integer>> permutations = generatePerm(original);
+        List<List<Integer>> permutations = generatePermutations(original);
         for (List<Integer> smallerPermutated : permutations) {
             for (int index=0; index <= smallerPermutated.size(); index++) {
                 List<Integer> temp = new ArrayList<Integer>(smallerPermutated);
@@ -124,7 +125,7 @@ public class Knapsack {
         }
 
         for(int R = rectangles.size(); R >= 1; R--) {
-            List<int[]> combinations = generate(rectangles.size(), R);
+            List<int[]> combinations = generateCombinations(rectangles.size(), R);
 
             for (int[] combination : combinations) {
                 int combinationValue = 0;
@@ -146,7 +147,7 @@ public class Knapsack {
                             list.add(i);
                         }
 
-                        List<List<Integer>> permutations = generatePerm(list);
+                        List<List<Integer>> permutations = generatePermutations(list);
                         ContainerArray currentArray = new ContainerArray(L,W);
 
                         for (List<Integer> perm : permutations) {
