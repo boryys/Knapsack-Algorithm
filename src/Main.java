@@ -14,8 +14,8 @@ public class Main {
     public static void main(String[] args) {
 
 
-        int L = 15;
-        int W = 15;
+        int L = 5;
+        int W = 5;
         int areaF = L*W;
         Knapsack knapsack = new Knapsack(L,W);
         System.out.println("Area F = " + areaF);
@@ -38,16 +38,16 @@ public class Main {
         tmp.add(rec10);
         Rectangle rec1 = new Rectangle(1,4, 3, 5);
         tmp.add(rec1);
-        Rectangle rec2 = new Rectangle(2, 3, 3, 13);
+        Rectangle rec2 = new Rectangle(2, 3, 3, 10);
         tmp.add(rec2);
-        Rectangle rec3 = new Rectangle(3, 5, 2, 13);
+        Rectangle rec3 = new Rectangle(3, 5, 2, 10);
         tmp.add(rec3);
-        Rectangle rec4 = new Rectangle(4, 1, 4, 13);
+        Rectangle rec4 = new Rectangle(4, 1, 4, 10);
         tmp.add(rec4);
         Rectangle rec5 = new Rectangle(5, 6, 6, 25);
         tmp.add(rec5);
 
-        InitialDraw(L,W,rectangles,10);
+        InitialDraw(L,W,tmp,10);
         for(Rectangle rec : tmp)
         {
             if(rec.l <= knapsack.L && rec.w <= knapsack.W)
@@ -114,7 +114,7 @@ public class Main {
         System.out.println("Max ");
         maxContainerArray.printArray();
         System.out.println("Value = " + max);
-        finalDrawing(L,W,rectangles,10,maxContainerArray);
+        finalDrawing(L,W,tmp,10,maxContainerArray);
     }
 
 
@@ -138,9 +138,13 @@ public class Main {
                 g2.draw(new Rectangle2D.Double(x, y, scale * W, scale * L));
 
                 int colorMultiplier = generateColorMultiplicator(rectangles);
+
                 for (Rectangle rec: rectangles
                      ) {
-                    g2.setColor(new Color(rec.p*colorMultiplier,rec.p*colorMultiplier,rec.p*colorMultiplier));
+                    int color = rec.p * colorMultiplier;
+                    if (color >255)
+                        color = 255;
+                    g2.setColor(new Color(color,color,color));
                     g2.draw(new Rectangle2D.Double(x+ offsetX + scale*W, y + offsetY,rec.w * scale, rec.l*scale));
                     g2.fill(new Rectangle2D.Double(x+offsetX+ scale*W, y + offsetY,rec.w * scale, rec.l*scale));
                     offsetY += rec.l*scale + 10;
@@ -182,12 +186,37 @@ public class Main {
 
                         if(id>0)
                         {
+
                             Rectangle rec = rectangles.get(id-1);
-                            g2.setColor(new Color(rec.p*colorMultiplier,rec.p*colorMultiplier,rec.p*colorMultiplier));
+                            int color = rec.p * colorMultiplier;
+                            if (color >255)
+                                color = 255;
+                            g2.setColor(new Color(color,color,color));
                             g2.fill(new Rectangle2D.Double(x+ scale*j, y + scale*i,scale, scale));
                         }
 
                     }
+                }
+
+                for(int i =0; i<L; i++)
+                {
+                    for (int j = 0; j < W; j++)
+                    {
+                        int id = containerArray.Area[i][j];
+                        rectangles.removeIf(obj -> obj.id == id);
+
+                    }
+                }
+
+                for (Rectangle rec: rectangles
+                ) {
+                    int color = rec.p * colorMultiplier;
+                    if (color >255)
+                        color = 255;
+                    g2.setColor(new Color(color,color,color));
+                    g2.draw(new Rectangle2D.Double(x+ offsetX + scale*W, y + offsetY,rec.w * scale, rec.l*scale));
+                    g2.fill(new Rectangle2D.Double(x+offsetX+ scale*W, y + offsetY,rec.w * scale, rec.l*scale));
+                    offsetY += rec.l*scale + 10;
                 }
 
 
