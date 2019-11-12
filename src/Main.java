@@ -1,14 +1,20 @@
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.swing.*;
+
 
 public class Main {
 
 
     public static void main(String[] args) {
 
-        int L = 7;
-        int W = 7;
+
+        int L = 15;
+        int W = 15;
         int areaF = L*W;
         Knapsack knapsack = new Knapsack(L,W);
         System.out.println("Area F = " + areaF);
@@ -31,15 +37,16 @@ public class Main {
         tmp.add(rec10);
         Rectangle rec1 = new Rectangle(1,4, 3, 5);
         tmp.add(rec1);
-        Rectangle rec2 = new Rectangle(2, 3, 3, 3);
+        Rectangle rec2 = new Rectangle(2, 3, 3, 13);
         tmp.add(rec2);
-        Rectangle rec3 = new Rectangle(3, 5, 2, 3);
+        Rectangle rec3 = new Rectangle(3, 5, 2, 13);
         tmp.add(rec3);
-        Rectangle rec4 = new Rectangle(4, 1, 4, 3);
+        Rectangle rec4 = new Rectangle(4, 1, 4, 13);
         tmp.add(rec4);
         Rectangle rec5 = new Rectangle(5, 6, 6, 25);
         tmp.add(rec5);
 
+        InitialDraw(L,W,rectangles,10);
         for(Rectangle rec : tmp)
         {
             if(rec.l <= knapsack.L && rec.w <= knapsack.W)
@@ -107,4 +114,57 @@ public class Main {
         maxContainerArray.printArray();
         System.out.println("Value = " + max);
     }
+
+
+
+    public static void InitialDraw(int L, int W,  List<Rectangle> rectangles, int scale) {
+        JFrame frame = new JFrame("Draw Rectangle");
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.add(new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                // Draw a rectangle using Rectangle2D class
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setColor(Color.BLACK);
+
+                double x = 100;
+                double y = 100;
+
+                int offsetX = 20;
+                int offsetY = 20;
+                // Draw the red rectangle
+                g2.draw(new Rectangle2D.Double(x, y, scale * W, scale * L));
+
+                int colorMultiplier = generateColorMultiplicator(rectangles);
+                for (Rectangle rec: rectangles
+                     ) {
+                    g2.setColor(new Color(rec.p*colorMultiplier,rec.p*colorMultiplier,rec.p*colorMultiplier));
+                    g2.draw(new Rectangle2D.Double(x+ offsetX + scale*W, y + offsetY,rec.w * scale, rec.l*scale));
+                    g2.fill(new Rectangle2D.Double(x+offsetX+ scale*W, y + offsetY,rec.w * scale, rec.l*scale));
+                    offsetY += rec.l*scale + 10;
+                }
+
+            }
+        }, BorderLayout.CENTER);
+
+        frame.pack();
+        frame.setSize(new Dimension(1000, 1000));
+        frame.setVisible(true);
+    }
+
+    private static int generateColorMultiplicator(List<Rectangle> rectangles)
+    {
+        float multiplier = 0;
+        int max = 0;
+        int min = rectangles.get(0).p;
+        for (Rectangle rec: rectangles
+        ) {
+            if(rec.p < min)
+                min = rec.p;
+            if(rec.p > max)
+                max = rec.p;
+        }
+        return (int) 255/(max-min);
+    }
+
 }
