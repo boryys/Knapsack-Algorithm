@@ -129,26 +129,18 @@ public class Main {
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setColor(Color.BLACK);
 
-                double x = 100;
-                double y = 100;
+                int x = 100;
+                int y = 100;
 
                 int offsetX = 20;
                 int offsetY = 20;
-                // Draw the red rectangle
+
+                // Draw the container
                 g2.draw(new Rectangle2D.Double(x, y, scale * W, scale * L));
 
-                int colorMultiplier = generateColorMultiplicator(rectangles);
+                //Draw rectangles next to a container
+                drawListOfRectangles(g2,rectangles,x,y,offsetX,offsetY,scale,L,W);
 
-                for (Rectangle rec: rectangles
-                     ) {
-                    int color = rec.p * colorMultiplier;
-                    if (color >255)
-                        color = 255;
-                    g2.setColor(new Color(color,color,color));
-                    g2.draw(new Rectangle2D.Double(x+ offsetX + scale*W, y + offsetY,rec.w * scale, rec.l*scale));
-                    g2.fill(new Rectangle2D.Double(x+offsetX+ scale*W, y + offsetY,rec.w * scale, rec.l*scale));
-                    offsetY += rec.l*scale + 10;
-                }
 
             }
         }, BorderLayout.CENTER);
@@ -169,8 +161,8 @@ public class Main {
                 // Draw a rectangle using Rectangle2D class
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setColor(Color.BLACK);
-                double x = 100;
-                double y = 100;
+                int x = 100;
+                int y = 100;
                 g2.draw(new Rectangle2D.Double(x, y, scale * W, scale * L));
 
                 int offsetX = 20;
@@ -178,6 +170,8 @@ public class Main {
 
                 int colorMultiplier = generateColorMultiplicator(rectangles);
                 rectangles.sort(Comparator.comparing(Rectangle::getId));
+
+                //Draw the container with rectangles
                 for(int i =0; i<L; i++)
                 {
                     for(int j =0; j<W;j++)
@@ -186,7 +180,8 @@ public class Main {
 
                         if(id>0)
                         {
-
+                            System.out.println("ID " + id);
+                            System.out.println("Size " + rectangles.size());
                             Rectangle rec = rectangles.get(id-1);
                             int color = rec.p * colorMultiplier;
                             if (color >255)
@@ -208,16 +203,8 @@ public class Main {
                     }
                 }
 
-                for (Rectangle rec: rectangles
-                ) {
-                    int color = rec.p * colorMultiplier;
-                    if (color >255)
-                        color = 255;
-                    g2.setColor(new Color(color,color,color));
-                    g2.draw(new Rectangle2D.Double(x+ offsetX + scale*W, y + offsetY,rec.w * scale, rec.l*scale));
-                    g2.fill(new Rectangle2D.Double(x+offsetX+ scale*W, y + offsetY,rec.w * scale, rec.l*scale));
-                    offsetY += rec.l*scale + 10;
-                }
+                //Draw rectangles next to a container
+                drawListOfRectangles(g2,rectangles,x,y,offsetX,offsetY,scale,L,W);
 
 
             }
@@ -226,6 +213,23 @@ public class Main {
         frame.pack();
         frame.setSize(new Dimension(1000, 1000));
         frame.setVisible(true);
+    }
+
+    private static void drawListOfRectangles(Graphics2D g2, List<Rectangle> rectangles, int x, int y, int offsetX, int offsetY, int scale, int L, int W)
+    {
+
+        int colorMultiplier = generateColorMultiplicator(rectangles);
+
+        for (Rectangle rec: rectangles
+        ) {
+            int color = rec.p * colorMultiplier;
+            if (color >255)
+                color = 255;
+            g2.setColor(new Color(color,color,color));
+            g2.draw(new Rectangle2D.Double(x+ offsetX + scale*W, y + offsetY,rec.w * scale, rec.l*scale));
+            g2.fill(new Rectangle2D.Double(x+offsetX+ scale*W, y + offsetY,rec.w * scale, rec.l*scale));
+            offsetY += rec.l*scale + 10;
+        }
     }
 
     private static int generateColorMultiplicator(List<Rectangle> rectangles)
