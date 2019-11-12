@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.*;
@@ -113,12 +114,13 @@ public class Main {
         System.out.println("Max ");
         maxContainerArray.printArray();
         System.out.println("Value = " + max);
+        finalDrawing(L,W,rectangles,10,maxContainerArray);
     }
 
 
 
     public static void InitialDraw(int L, int W,  List<Rectangle> rectangles, int scale) {
-        JFrame frame = new JFrame("Draw Rectangle");
+        JFrame frame = new JFrame("Initials Rectangles");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.add(new JPanel() {
             @Override
@@ -143,6 +145,51 @@ public class Main {
                     g2.fill(new Rectangle2D.Double(x+offsetX+ scale*W, y + offsetY,rec.w * scale, rec.l*scale));
                     offsetY += rec.l*scale + 10;
                 }
+
+            }
+        }, BorderLayout.CENTER);
+
+        frame.pack();
+        frame.setSize(new Dimension(1000, 1000));
+        frame.setVisible(true);
+    }
+
+
+    private static void finalDrawing(int L, int W,  List<Rectangle> rectangles, int scale, ContainerArray containerArray)
+    {
+        JFrame frame = new JFrame("Final Rectangles");
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.add(new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                // Draw a rectangle using Rectangle2D class
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setColor(Color.BLACK);
+                double x = 100;
+                double y = 100;
+                g2.draw(new Rectangle2D.Double(x, y, scale * W, scale * L));
+
+                int offsetX = 20;
+                int offsetY = 20;
+
+                int colorMultiplier = generateColorMultiplicator(rectangles);
+                rectangles.sort(Comparator.comparing(Rectangle::getId));
+                for(int i =0; i<L; i++)
+                {
+                    for(int j =0; j<W;j++)
+                    {
+                        int id = containerArray.Area[i][j];
+
+                        if(id>0)
+                        {
+                            Rectangle rec = rectangles.get(id-1);
+                            g2.setColor(new Color(rec.p*colorMultiplier,rec.p*colorMultiplier,rec.p*colorMultiplier));
+                            g2.fill(new Rectangle2D.Double(x+ scale*j, y + scale*i,scale, scale));
+                        }
+
+                    }
+                }
+
 
             }
         }, BorderLayout.CENTER);

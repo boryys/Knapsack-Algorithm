@@ -12,4 +12,9 @@ public class Rectangle {
         this.area = _l * _w;
         this.p = _p;
     }
+
+    public int getId()
+    {
+        return id;
+    }
 }
