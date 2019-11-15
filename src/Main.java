@@ -25,7 +25,7 @@ public class Main {
         int W = 5;
         int areaF = L*W;
 
-        if(input != null)
+        if(input != "")
         {
             knapsack = TxtModule.getKnapSack(input);
             tmp = TxtModule.getRectangles(input);
