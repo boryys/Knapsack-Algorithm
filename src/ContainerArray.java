@@ -54,10 +54,13 @@ public class ContainerArray {
         for (int i = Length - 1; i >= 0; i--) {
             for (int j = 0; j < Width; j++) {
                 System.out.print(Area[i][j] + " ");
+                Logger.addToLog(Area[i][j] + " ");
             }
             System.out.println("");
+            Logger.addToLog("");
         }
         System.out.println("");
+        Logger.addToLog("");
     }
 
 }

@@ -6,13 +6,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Logger {
-    String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+     static String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 
-    public  void CreateLog(){
+
+    public static void CreateLog(){
+
+        new File(System.getProperty("user.dir") +  "\\Logs").mkdir();
 
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter("Log" + timeStamp, "UTF-8");
+            writer = new PrintWriter("Logs\\Log" + timeStamp, "UTF-8");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
@@ -23,13 +26,12 @@ public class Logger {
         writer.close();
     }
 
-    public void addToLog(){
-        String logAddition=null;//TODO
+    public static void  addToLog(String addition){
         try
         {
-            String filename= "Log" + timeStamp + ".txt";
+            String filename= "Logs\\Log" + timeStamp + ".txt";
             FileWriter fw = new FileWriter(filename,true); //the true will append the new data
-            fw.write(logAddition + "\n");//appends the string to the file
+            fw.write(addition + "\n");//appends the string to the file
             fw.close();
         }
         catch(IOException ioe)

@@ -5,6 +5,8 @@ import java.io.*;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class TxtModule {
@@ -31,12 +33,12 @@ public class TxtModule {
             }else if(s2.toUpperCase() =="D"){
                 output = selectDefaultTxt();
             }else{
-                System.out.print("unknown option chosen");
+                System.out.print("unknown option chosen, giving default values");
             }
         }else if(s1.toUpperCase() == "M"){
             output = manualInput();
         }else{
-            System.out.print("unknown option chosen");
+            System.out.print("unknown option chosen, giving default values");
         }
         return output;
     }
@@ -46,7 +48,7 @@ public class TxtModule {
         String data = "";
         /*data = new String(Files.readAllBytes(Path.get(fileName)));
         return data;*/
-        File file = new File("C:\\Users\\pankaj\\Desktop\\test.txt");
+        File file = new File(fileName);
 
         BufferedReader br = new BufferedReader(new FileReader(file));
 
@@ -109,14 +111,14 @@ public class TxtModule {
         String output=null;
         Scanner scan = new Scanner(System.in);
 
-        System.out.print("input format: knapsack's width; ks's height; amount of boxes");
+        System.out.print("input format: knapsack's length; ks's width; amount of boxes");
         String s = scan.next();
         output = output + s + "\n";
         Integer amountOfBoxes = Integer.parseInt(s.substring(s.lastIndexOf(" ")+1));
         for(int i=0;i<amountOfBoxes;i++)
         {
             System.out.print("box no. " + i+1);
-            System.out.print("input format: width; height; value");
+            System.out.print("input format: length; width; value");
             s = scan.next();
             output = output + s + "\n";
         }
@@ -124,8 +126,27 @@ public class TxtModule {
         return output;
     }
 
-    public static Integer[] formatOutput(String output){
-        //TODO
-        return null;
+    public static Knapsack getKnapSack (String output){
+        String[] parts = output.split(" ");
+        Knapsack result = new Knapsack(Integer.parseInt(parts[0]),Integer.parseInt(parts[1]));
+        return result;
     }
+
+    public static List<Rectangle> getRectangles(String output){
+        List<Rectangle> result = new ArrayList<Rectangle>();
+        String[] lines = output.split("\n");
+        int ammountOfBoxes = Integer.parseInt(lines[0].substring(lines[0].lastIndexOf(" ")+1));
+        for(int i=1;i<ammountOfBoxes;i++){
+            String[] attributes = lines[i].split(" ");
+            Rectangle rec = new Rectangle(
+                    i,
+                    Integer.parseInt(attributes[0]),
+                    Integer.parseInt(attributes[1]),
+                    Integer.parseInt(attributes[2])
+            );
+            result.add(rec);
+        }
+        return result;
+    }
+
 }
