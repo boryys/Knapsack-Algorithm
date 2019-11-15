@@ -15,7 +15,7 @@ public class Logger {
 
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter("Logs\\Log" + timeStamp, "UTF-8");
+            writer = new PrintWriter("Logs\\Log" + timeStamp + ".txt", "UTF-8");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
