@@ -38,14 +38,15 @@ public class Main {
         tmp.add(rec10);
         Rectangle rec1 = new Rectangle(1,4, 3, 5);
         tmp.add(rec1);
-        Rectangle rec2 = new Rectangle(2, 3, 3, 10);
+        Rectangle rec2 = new Rectangle(2, 3, 3, 15);
         tmp.add(rec2);
-        Rectangle rec3 = new Rectangle(3, 5, 2, 10);
+        Rectangle rec3 = new Rectangle(3, 5, 2, 15);
         tmp.add(rec3);
-        Rectangle rec4 = new Rectangle(4, 1, 4, 10);
+        Rectangle rec4 = new Rectangle(4, 1, 4, 12);
         tmp.add(rec4);
         Rectangle rec5 = new Rectangle(5, 6, 6, 25);
         tmp.add(rec5);
+
 
         InitialDraw(L,W,tmp,10);
         for(Rectangle rec : tmp)
@@ -137,7 +138,6 @@ public class Main {
 
                 // Draw the container
                 g2.draw(new Rectangle2D.Double(x, y, scale * W, scale * L));
-
                 //Draw rectangles next to a container
                 drawListOfRectangles(g2,rectangles,x,y,offsetX,offsetY,scale,L,W);
 
@@ -154,6 +154,7 @@ public class Main {
     private static void finalDrawing(int L, int W,  List<Rectangle> rectangles, int scale, ContainerArray containerArray)
     {
         JFrame frame = new JFrame("Final Rectangles");
+        Colours colours = new Colours();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.add(new JPanel() {
             @Override
@@ -168,7 +169,6 @@ public class Main {
                 int offsetX = 20;
                 int offsetY = 20;
 
-                int colorMultiplier = generateColorMultiplicator(rectangles);
                 rectangles.sort(Comparator.comparing(Rectangle::getId));
 
                 //Draw the container with rectangles
@@ -178,33 +178,30 @@ public class Main {
                     {
                         int id = containerArray.Area[i][j];
 
-                        if(id>0)
+                        if(id>0 && id<rectangles.size())
                         {
-                            System.out.println("ID " + id);
-                            System.out.println("Size " + rectangles.size());
                             Rectangle rec = rectangles.get(id-1);
-                            int color = rec.p * colorMultiplier;
-                            if (color >255)
-                                color = 255;
-                            g2.setColor(new Color(color,color,color));
+                            g2.setColor(colours.colorList.get(rec.id%25));
                             g2.fill(new Rectangle2D.Double(x+ scale*j, y + scale*i,scale, scale));
+                            g2.drawString(Integer.toString(containerArray.Area[i][j]),x+ scale*j, y + scale*i);
                         }
 
                     }
                 }
 
+                List<Rectangle> drawingList = new ArrayList<>(rectangles);
                 for(int i =0; i<L; i++)
                 {
                     for (int j = 0; j < W; j++)
                     {
                         int id = containerArray.Area[i][j];
-                        rectangles.removeIf(obj -> obj.id == id);
+                        drawingList.removeIf(obj -> obj.id == id);
 
                     }
                 }
 
                 //Draw rectangles next to a container
-                drawListOfRectangles(g2,rectangles,x,y,offsetX,offsetY,scale,L,W);
+                drawListOfRectangles(g2,drawingList,x,y,offsetX,offsetY,scale,L,W);
 
 
             }
@@ -218,23 +215,20 @@ public class Main {
     private static void drawListOfRectangles(Graphics2D g2, List<Rectangle> rectangles, int x, int y, int offsetX, int offsetY, int scale, int L, int W)
     {
 
-        int colorMultiplier = generateColorMultiplicator(rectangles);
+        Colours colours = new Colours();
 
         for (Rectangle rec: rectangles
         ) {
-            int color = rec.p * colorMultiplier;
-            if (color >255)
-                color = 255;
-            g2.setColor(new Color(color,color,color));
+            g2.setColor(colours.colorList.get(rec.id%25));
             g2.draw(new Rectangle2D.Double(x+ offsetX + scale*W, y + offsetY,rec.w * scale, rec.l*scale));
             g2.fill(new Rectangle2D.Double(x+offsetX+ scale*W, y + offsetY,rec.w * scale, rec.l*scale));
             offsetY += rec.l*scale + 10;
+            g2.drawString(Integer.toString(rec.id), x+offsetX+ scale*W + scale*rec.w,y + offsetY);
         }
     }
 
-    private static int generateColorMultiplicator(List<Rectangle> rectangles)
+    private static float generateColorMultiplicator(List<Rectangle> rectangles)
     {
-        float multiplier = 0;
         int max = 0;
         int min = rectangles.get(0).p;
         for (Rectangle rec: rectangles
@@ -244,7 +238,7 @@ public class Main {
             if(rec.p > max)
                 max = rec.p;
         }
-        return (int) 255/(max-min);
+        return 255f/(float)(max-min);
     }
 
 }
