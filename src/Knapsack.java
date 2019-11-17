@@ -45,6 +45,7 @@ public class Knapsack {
         }
 
         System.out.println(sum);
+        Logger.addToLog(Integer.toString(sum));
         containerArray.printArray();
         return true;
     }

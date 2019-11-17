@@ -51,13 +51,18 @@ public class ContainerArray {
     }
 
     public void printArray() {
+        String table="";
         for (int i = Length - 1; i >= 0; i--) {
             for (int j = 0; j < Width; j++) {
                 System.out.print(Area[i][j] + " ");
+                table += Area[i][j] + " ";
             }
             System.out.println("");
+            table += "\n";
         }
         System.out.println("");
+        table += "\n";
+        Logger.addToLog(table);
     }
 
 }

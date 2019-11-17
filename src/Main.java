@@ -1,3 +1,6 @@
+import com.sun.xml.internal.txw2.TXW;
+import sun.rmi.runtime.Log;
+
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -13,39 +16,59 @@ public class Main {
 
     public static void main(String[] args) {
 
+        Logger.CreateLog();
 
+        String input = TxtModule.Console();
+        Knapsack knapsack=null;
+        List<Rectangle> tmp = null;
         int L = 5;
         int W = 5;
         int areaF = L*W;
-        Knapsack knapsack = new Knapsack(L,W);
+
+        if(input != "")
+        {
+            knapsack = TxtModule.getKnapSack(input);
+            tmp = TxtModule.getRectangles(input);
+            L = knapsack.L;
+            W = knapsack.W;
+            areaF = knapsack.area;
+        }else{
+            knapsack = new Knapsack(L,W);
+
+            tmp = new ArrayList<Rectangle>();
+
+            Rectangle rec6 = new Rectangle(6,2, 2, 3);
+            tmp.add(rec6);
+            Rectangle rec7 = new Rectangle(7, 2, 2, 1);
+            tmp.add(rec7);
+            Rectangle rec8 = new Rectangle(8, 2, 2, 1);
+            tmp.add(rec8);
+            Rectangle rec9 = new Rectangle(9, 3, 3, 2);
+            tmp.add(rec9);
+            Rectangle rec10 = new Rectangle(10, 1, 8, 4);
+            tmp.add(rec10);
+            Rectangle rec1 = new Rectangle(1,4, 3, 5);
+            tmp.add(rec1);
+            Rectangle rec2 = new Rectangle(2, 3, 3, 10);
+            tmp.add(rec2);
+            Rectangle rec3 = new Rectangle(3, 5, 2, 10);
+            tmp.add(rec3);
+            Rectangle rec4 = new Rectangle(4, 1, 4, 10);
+            tmp.add(rec4);
+            Rectangle rec5 = new Rectangle(5, 6, 6, 25);
+            tmp.add(rec5);
+        }
+
+
         System.out.println("Area F = " + areaF);
+        Logger.addToLog("Area F = " + areaF);
+
         ContainerArray maxContainerArray = new ContainerArray(knapsack.L,knapsack.W);
         maxContainerArray.printArray();
         int max = 0;
 
         List<Rectangle> rectangles = new ArrayList<Rectangle>();
-        List<Rectangle> tmp = new ArrayList<Rectangle>();
 
-        Rectangle rec6 = new Rectangle(6,2, 2, 3);
-        tmp.add(rec6);
-        Rectangle rec7 = new Rectangle(7, 2, 2, 1);
-        tmp.add(rec7);
-        Rectangle rec8 = new Rectangle(8, 2, 2, 1);
-        tmp.add(rec8);
-        Rectangle rec9 = new Rectangle(9, 3, 3, 2);
-        tmp.add(rec9);
-        Rectangle rec10 = new Rectangle(10, 1, 8, 4);
-        tmp.add(rec10);
-        Rectangle rec1 = new Rectangle(1,4, 3, 5);
-        tmp.add(rec1);
-        Rectangle rec2 = new Rectangle(2, 3, 3, 15);
-        tmp.add(rec2);
-        Rectangle rec3 = new Rectangle(3, 5, 2, 15);
-        tmp.add(rec3);
-        Rectangle rec4 = new Rectangle(4, 1, 4, 12);
-        tmp.add(rec4);
-        Rectangle rec5 = new Rectangle(5, 6, 6, 25);
-        tmp.add(rec5);
 
 
         InitialDraw(L,W,tmp,10);
@@ -60,6 +83,7 @@ public class Main {
         for(Rectangle rec : rectangles)
         {
             System.out.println("id: " + rec.id + ", l: " + rec.l + ", w: " + rec.w + ", p: " + rec.p + ", area: " + rec.area);
+            Logger.addToLog("id: " + rec.id + ", l: " + rec.l + ", w: " + rec.w + ", p: " + rec.p + ", area: " + rec.area);
         }
 
         for(int R = rectangles.size(); R >= 1; R--) {
@@ -79,6 +103,7 @@ public class Main {
                     if(combinationArea <= knapsack.area)
                     {
                         System.out.println(Arrays.toString(combination) + " Value = " + combinationValue + " Area = " + combinationArea);
+                        Logger.addToLog(Arrays.toString(combination) + " Value = " + combinationValue + " Area = " + combinationArea);
 
                         List<Integer> list = new ArrayList<Integer>();
                         for (int i : combination) {
@@ -101,6 +126,7 @@ public class Main {
 
                                 maxContainerArray.printArray();
                                 System.out.println("Value = " + max);
+                                Logger.addToLog("Value = " + max);
 
                                 break;
                             }
@@ -110,11 +136,14 @@ public class Main {
                 }
             }
             System.out.println("");
+            Logger.addToLog("");
         }
 
         System.out.println("Max ");
+        Logger.addToLog("Max ");
         maxContainerArray.printArray();
         System.out.println("Value = " + max);
+        Logger.addToLog("Value = " + max);
         finalDrawing(L,W,tmp,10,maxContainerArray);
     }
 
@@ -180,6 +209,7 @@ public class Main {
 
                         if(id>0 && id<rectangles.size())
                         {
+
                             Rectangle rec = rectangles.get(id-1);
                             g2.setColor(colours.colorList.get(rec.id%25));
                             g2.fill(new Rectangle2D.Double(x+ scale*j, y + scale*i,scale, scale));
