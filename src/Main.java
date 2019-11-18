@@ -221,7 +221,7 @@ public class Main {
                     {
                         int id = containerArray.Area[i][j];
 
-                        if(id>0 && id<rectangles.size())
+                        if(id>0)
                         {
 
                             Rectangle rec = rectangles.get(id-1);
