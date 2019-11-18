@@ -69,14 +69,19 @@ public class Main {
 
         List<Rectangle> rectangles = new ArrayList<Rectangle>();
 
-
-
         InitialDraw(L,W,tmp,10);
         for(Rectangle rec : tmp)
         {
             if(rec.l <= knapsack.L && rec.w <= knapsack.W)
             {
                 rectangles.add(rec);
+            }
+            else
+            {
+                if(rec.l <= knapsack.W && rec.w <= knapsack.L)
+                {
+                    rectangles.add(rec);
+                }
             }
         }
 
@@ -87,6 +92,7 @@ public class Main {
         }
 
         for(int R = rectangles.size(); R >= 1; R--) {
+            List<boolean[]> binaryArrays = knapsack.generateAllBinarySequences(R);
             List<int[]> combinations = knapsack.generateCombinations(rectangles.size(), R);
 
             for (int[] combination : combinations) {
@@ -111,27 +117,35 @@ public class Main {
                         }
 
                         List<List<Integer>> permutations = knapsack.generatePermutations(list);
-                        ContainerArray currentArray = new ContainerArray(knapsack.L,knapsack.W);
+                        //ContainerArray currentArray = new ContainerArray(knapsack.L,knapsack.W);
 
                         for (List<Integer> perm : permutations) {
                             List<Rectangle> recs = new ArrayList<Rectangle>();
-                            currentArray.ZeroArray();
+                            //currentArray.ZeroArray();
+
                             for (int i : perm) {
                                 recs.add(rectangles.get(i));
                             }
-                            if(knapsack.fillKnapsack(recs, currentArray))
-                            {
-                                maxContainerArray = currentArray;
-                                max = combinationValue;
 
-                                maxContainerArray.printArray();
-                                System.out.println("Value = " + max);
-                                Logger.addToLog("Value = " + max);
+                            boolean filled = false;
+                            for(boolean[] arr : binaryArrays) {
+                                ContainerArray tmpF = new ContainerArray(knapsack.L,knapsack.W);
+                                tmpF.ZeroArray();
 
-                                break;
+                                if (knapsack.fillKnapsack(recs, tmpF, arr)) {
+                                    maxContainerArray = tmpF;
+                                    max = combinationValue;
+
+                                    maxContainerArray.printArray();
+                                    System.out.println("Value = " + max);
+                                    Logger.addToLog("Value = " + max);
+
+                                    filled = true;
+                                    break;
+                                }
                             }
+                            if(filled) break;
                         }
-
                     }
                 }
             }
@@ -222,7 +236,7 @@ public class Main {
                 List<Rectangle> drawingList = new ArrayList<>(rectangles);
                 for(int i =0; i<L; i++)
                 {
-                    for (int j = 0; j < W; j++)
+                    for (int j =0; j <W; j++)
                     {
                         int id = containerArray.Area[i][j];
                         drawingList.removeIf(obj -> obj.id == id);

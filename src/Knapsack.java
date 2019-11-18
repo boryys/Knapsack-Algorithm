@@ -17,23 +17,35 @@ public class Knapsack {
     }
 
 
-    public boolean fillKnapsack(List<Rectangle> rectangles, ContainerArray containerArray)
+    public boolean fillKnapsack(List<Rectangle> rectangles, ContainerArray containerArray, boolean[] arr)
     {
         boolean paintedK;
         int sum = 0;
-        for(int k = 0; k < rectangles.size(); k++)
+        int recL;
+        int recW;
+        for(Rectangle rectangle : rectangles)
         {
             paintedK = false;
+
+            if(arr[rectangles.indexOf(rectangle)]) {
+                recL = rectangle.w;
+                recW = rectangle.l;
+            }
+            else {
+                recL = rectangle.l;
+                recW = rectangle.w;
+            }
+
             for(int i = 0; i < L; i++)
             {
                 for (int j = 0; j < W; j++)
                 {
-                    if((rectangles.get(k).l - 1) <= i && (rectangles.get(k).w - 1) <= j)
+                    if((recL - 1) <= i && (recW - 1) <= j)
                     {
-                        if(containerArray.canPutRectangle(rectangles.get(k), i, j))
+                        if(containerArray.canPutRectangle(recL, recW, i, j))
                         {
-                            containerArray.putRectangle(rectangles.get(k), i, j);
-                            sum += rectangles.get(k).p;
+                            containerArray.putRectangle(rectangle, recL, recW, i, j);
+                            sum += rectangle.p;
                             paintedK = true;
                             break;
                         }
@@ -89,5 +101,33 @@ public class Knapsack {
         return returnValue;
     }
 
+    static void addToList(ArrayList<boolean[]> list, boolean arr[], int n)
+    {
+        boolean[] copy = new boolean[n];
+        System.arraycopy(arr, 0, copy, 0, n);
+        list.add(copy);
+    }
 
+    static void generateAllBinaryStringsHelper(ArrayList<boolean[]> list, int n, boolean arr[], int i)
+    {
+        if (i == n)
+        {
+            addToList(list, arr, n);
+            return;
+        }
+        arr[i] = false;
+        generateAllBinaryStringsHelper(list, n, arr, i + 1);
+        arr[i] = true;
+        generateAllBinaryStringsHelper(list, n, arr, i + 1);
+    }
+
+    static ArrayList<boolean[]> generateAllBinarySequences(int n)
+    {
+        boolean[] arr = new boolean[n];
+
+        ArrayList<boolean[]> list = new ArrayList<>();
+        generateAllBinaryStringsHelper(list, n, arr, 0);
+
+        return list;
+    }
 }

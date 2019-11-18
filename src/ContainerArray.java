@@ -27,22 +27,22 @@ public class ContainerArray {
         }
     }
 
-    public void putRectangle(Rectangle rec, int i, int j)
+    public void putRectangle(Rectangle rec, int L, int W, int i, int j)
     {
-        for(int l = 0; l < rec.l; l++)
+        for(int l = 0; l < L; l++)
         {
-            for(int w = 0; w < rec.w; w++)
+            for(int w = 0; w < W; w++)
             {
                 Area[i - l][j - w] = rec.id;
             }
         }
     }
 
-    public boolean canPutRectangle(Rectangle rec, int i, int j)
+    public boolean canPutRectangle(int L, int W, int i, int j)
     {
-        for(int l = 0; l < rec.l; l++)
+        for(int l = 0; l < L; l++)
         {
-            for(int w = 0; w < rec.w; w++)
+            for(int w = 0; w < W; w++)
             {
                 if(Area[i - l][j - w] != 0) return false;
             }

@@ -11,11 +11,11 @@ public class Logger {
 
     public static void CreateLog(){
 
-        new File(System.getProperty("user.dir") +  "\\Logs").mkdir();
+        new File(System.getProperty("user.dir") +  "/Logs").mkdir();
 
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter("Logs\\Log" + timeStamp + ".txt", "UTF-8");
+            writer = new PrintWriter("Logs/Log" + timeStamp + ".txt", "UTF-8");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
@@ -29,7 +29,7 @@ public class Logger {
     public static void  addToLog(String addition){
         try
         {
-            String filename= "Logs\\Log" + timeStamp + ".txt";
+            String filename= "Logs/Log" + timeStamp + ".txt";
             FileWriter fw = new FileWriter(filename,true); //the true will append the new data
             fw.write(addition + "\n");//appends the string to the file
             fw.close();
@@ -40,3 +40,4 @@ public class Logger {
         }
     }
 }
+
