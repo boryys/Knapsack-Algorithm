@@ -52,7 +52,7 @@ public class ContainerArray {
 
     public void printArray() {
         String table="";
-        for (int i = Length - 1; i >= 0; i--) {
+        for (int i = 0; i < Length; i++) {
             for (int j = 0; j < Width; j++) {
                 System.out.print(Area[i][j] + " ");
                 table += Area[i][j] + " ";
