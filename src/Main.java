@@ -3,9 +3,8 @@ import sun.rmi.runtime.Log;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.List;
 
 import javax.swing.*;
@@ -158,6 +157,7 @@ public class Main {
         maxContainerArray.printArray();
         System.out.println("Value = " + max);
         Logger.addToLog("Value = " + max);
+        Logger.addToLog(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
         finalDrawing(L,W,tmp,10,maxContainerArray);
     }
 
