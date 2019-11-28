@@ -13,10 +13,15 @@ import javax.swing.*;
 
 public class Main {
 
+    private static JFrame frame = new JFrame("Knapsack algorithm");
+    private static JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
     public static void main(String[] args) {
 
         Logger.CreateLog();
+
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
 
         String input = TxtModule.Console();
         Knapsack knapsack=null;
@@ -159,14 +164,17 @@ public class Main {
         System.out.println("Value = " + max);
         Logger.addToLog("Value = " + max);
         finalDrawing(L,W,tmp,10,maxContainerArray);
+        frame.getContentPane().add(tabbedPane);
+        frame.pack();
+        frame.setSize(new Dimension(1000, 1000));
+        frame.setVisible(true);
+
     }
 
 
 
     public static void InitialDraw(int L, int W,  List<Rectangle> rectangles, int scale) {
-        JFrame frame = new JFrame("Initials Rectangles");
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.add(new JPanel() {
+        tabbedPane.add("Initial knapsack", new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 // Draw a rectangle using Rectangle2D class
@@ -181,25 +189,26 @@ public class Main {
 
                 // Draw the container
                 g2.draw(new Rectangle2D.Double(x, y, scale * W, scale * L));
+                g2.drawString("Knapsack:", x,y - offsetY);
                 //Draw rectangles next to a container
                 drawListOfRectangles(g2,rectangles,x,y,offsetX,offsetY,scale,L,W);
 
 
             }
-        }, BorderLayout.CENTER);
-
-        frame.pack();
-        frame.setSize(new Dimension(1000, 1000));
-        frame.setVisible(true);
+        });
+//
+//        frame.pack();
+//        frame.setSize(new Dimension(1000, 1000));
+//        frame.setVisible(true);
     }
 
 
     private static void finalDrawing(int L, int W,  List<Rectangle> rectangles, int scale, ContainerArray containerArray)
     {
-        JFrame frame = new JFrame("Final Rectangles");
+
         Colours colours = new Colours();
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.add(new JPanel() {
+
+        tabbedPane.add("Result",new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 // Draw a rectangle using Rectangle2D class
@@ -207,10 +216,14 @@ public class Main {
                 g2.setColor(Color.BLACK);
                 int x = 100;
                 int y = 100;
+
+
+
                 g2.draw(new Rectangle2D.Double(x, y, scale * W, scale * L));
 
                 int offsetX = 20;
                 int offsetY = 20;
+                g2.drawString("Knapsack:", x,y - offsetY);
 
                 rectangles.sort(Comparator.comparing(Rectangle::getId));
 
@@ -227,7 +240,8 @@ public class Main {
                             Rectangle rec = rectangles.get(id-1);
                             g2.setColor(colours.colorList.get(rec.id%25));
                             g2.fill(new Rectangle2D.Double(x+ scale*j, y + scale*i,scale, scale));
-                            g2.drawString(Integer.toString(containerArray.Area[i][j]),x+ scale*j, y + scale*i);
+                            g2.setColor(Color.BLACK);
+                            g2.drawString(Integer.toString(rec.p),x+ scale*j, y + scale*(i+1));
                         }
 
                     }
@@ -249,11 +263,11 @@ public class Main {
 
 
             }
-        }, BorderLayout.CENTER);
+        });
 
-        frame.pack();
-        frame.setSize(new Dimension(1000, 1000));
-        frame.setVisible(true);
+//        frame.pack();
+//        frame.setSize(new Dimension(1000, 1000));
+//        frame.setVisible(true);
     }
 
     private static void drawListOfRectangles(Graphics2D g2, List<Rectangle> rectangles, int x, int y, int offsetX, int offsetY, int scale, int L, int W)
@@ -261,13 +275,18 @@ public class Main {
 
         Colours colours = new Colours();
 
+        g2.setColor(Color.black);
+        g2.drawString("Remaining boxes:", x+offsetX+ scale*W,y - offsetY);
+
         for (Rectangle rec: rectangles
         ) {
             g2.setColor(colours.colorList.get(rec.id%25));
             g2.draw(new Rectangle2D.Double(x+ offsetX + scale*W, y + offsetY,rec.w * scale, rec.l*scale));
             g2.fill(new Rectangle2D.Double(x+offsetX+ scale*W, y + offsetY,rec.w * scale, rec.l*scale));
             offsetY += rec.l*scale + 10;
-            g2.drawString(Integer.toString(rec.id), x+offsetX+ scale*W + scale*rec.w,y + offsetY);
+            g2.setColor(Color.BLACK);
+            g2.drawString(" ID: "+Integer.toString(rec.id), x+2*offsetX+ scale*W + scale*rec.w,y + offsetY - (rec.l/2*scale));
+            g2.drawString(Integer.toString(rec.p),x+offsetX+ scale*W + (scale*rec.w/2), y + offsetY - (rec.l/2*scale));
         }
     }
 
